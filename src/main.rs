@@ -18,6 +18,7 @@ fn main() {
     use_slice();
     use_slice_with_array();
     use_struct();
+    tuple_struct();
 }
 
 fn another_function(x: i32) {
@@ -251,8 +252,8 @@ fn use_struct() {
     let new_user = build_user(String::from("123@qq.com"), String::from("username"));
 
     let user3 = User {
-        email: String::from("123"),
-        username: String::from("name"),
+        email: String::from("123 user3"),
+        username: String::from("name user3"),
         ..new_user
     };
 
@@ -263,3 +264,12 @@ fn use_struct() {
     println!("{} {} {} {}", user.email, user.username, user.active, user.sign_in_count);
 }
 
+fn tuple_struct() {
+    struct Color(i32, i32, i32);
+    struct Point(i32, i32, i32);
+
+    let _black = Color(0, 0, 0);
+    let _origin = Point(0, 0, 0);
+
+    println!("tuple_struct {} {}", _black.0, _origin.1);
+}
