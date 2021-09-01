@@ -21,6 +21,8 @@ fn main() {
     tuple_struct();
     example_struct();
     use_enum();
+    use_enum_options();
+    use_enum_option();
 }
 
 fn another_function(x: i32) {
@@ -383,7 +385,72 @@ fn use_enum() {
 }
 
 fn use_enum_options() {
-    let some_number = Some(5);
-    let some_string = Some("a string");
-    let absent_number: Option<i32> = None;
+    // let some_number = Some(5);
+    // let some_string = Some("a string");
+    // let absent_number: Option<i32> = None;
+
+    #[derive(Debug)] // so we can inspect the state in a minute
+    enum UsState {
+        Alabama,
+        Alaska,
+        // --snip--
+    }
+
+    enum Coin {
+        Penny,
+        Nickel,
+        Dime(UsState),
+        Quarter(String),
+    }
+
+    fn value_in_cents(coin: Coin) -> i8 {
+        match coin { // match里面的内容成为arms
+            Coin::Penny => {
+                println!("Lucky penny!");
+                1
+            },
+            Coin::Nickel => 5,
+            Coin::Dime(state) => {
+                println!("{:?}", state);
+                5
+            },
+            Coin::Quarter(state) => {
+                println!("{:?}", state);
+                5
+            }
+        }
+    }
+
+    let quarter = Coin::Quarter(String::from("123"));
+
+    value_in_cents(quarter);
+    value_in_cents(Coin::Penny);
+    value_in_cents(Coin::Nickel);
+    value_in_cents(Coin::Dime(UsState::Alabama));
+    value_in_cents(Coin::Dime(UsState::Alaska));
+}
+
+fn use_enum_option() {
+    fn plus_one(x: Option<i32>) -> i32 {
+        match x {
+            Some(i) => i,
+            _ => 2,
+        }
+    }
+
+    let value = match 0u8 {
+        _ => 2333
+    };
+
+    let some_v = Some(1);
+    let v = if let Some(2) = some_v {
+        1
+    } else {
+        2123_112
+    };
+
+    println!("{:?}", plus_one(Some(1)));
+    println!("{:?}", plus_one(None));
+    println!("{:?}", value);
+    println!("{:?}", v);
 }
