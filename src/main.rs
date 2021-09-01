@@ -19,6 +19,8 @@ fn main() {
     use_slice_with_array();
     use_struct();
     tuple_struct();
+    example_struct();
+    use_enum();
 }
 
 fn another_function(x: i32) {
@@ -272,4 +274,116 @@ fn tuple_struct() {
     let _origin = Point(0, 0, 0);
 
     println!("tuple_struct {} {}", _black.0, _origin.1);
+}
+
+# [derive(Debug)]
+struct ExampleReact {
+    width: i32,
+    height: i32
+}
+
+impl ExampleReact {
+    fn area(&mut self, second: i32) -> i32 {
+        println!("area ExampleReact {}", second);
+        self.width * self.height
+    }
+
+    fn can_hold(&self, another: &ExampleReact) -> bool {
+        self.width > another.width && self.height > another.height
+    }
+
+    fn hello(x: &ExampleReact) {
+        println!("hello {:?}", x);
+    }
+
+    fn make_react(x: i32, y: i32) -> ExampleReact {
+        ExampleReact {
+            width: x,
+            height: y
+        }
+    }
+}
+
+fn example_struct() {
+    let mut react1 = ExampleReact {
+        width: 2_000,
+        height: 4_000
+    };
+
+    let react2 = ExampleReact {
+        width: 1,
+        height: 1,
+    };
+
+    println!("example_struct {}", react1.area(32));
+    println!("example_struct 2 {}", react1.width);
+    println!("example_struct 3 {:?}", react1);
+    println!("example_struct 4 {:#?}", react1);
+
+    println!("is react2 can hold react1? {}", react2.can_hold(&react1));
+    ExampleReact::hello(&react1);
+
+    println!("is react2 can hold react1? {}", ExampleReact::can_hold(&react2, &react1));
+
+    let react3 = ExampleReact::make_react(100, 100);
+    println!("react 3 {:?}", react3);
+}
+
+fn use_enum() {
+    # [derive(Debug)]
+    enum IpAddKind {
+        V4,
+        V6
+    }
+
+    struct IpAddr {
+        kind: IpAddKind,
+        address: String
+    }
+
+    let ip_v4 = IpAddr {
+        kind: IpAddKind::V4,
+        address: String::from("127.0.0.1")
+    };
+
+    let ip_v6 = IpAddr {
+        kind: IpAddKind::V6,
+        address: String::from("::1")
+    };
+
+    # [derive(Debug)]
+    enum IpAddKinkWithType {
+        V4(u8, u8, u8, u8),
+        V6(String)
+    }
+
+    let four = IpAddKinkWithType::V4(127, 0, 0, 1);
+    let six = IpAddKinkWithType::V6(String::from("::1"));
+
+    println!("use_enum {:?} {:?} {:?} {:?} {} {}", four, six, ip_v4.kind, ip_v6.kind, ip_v4.address, ip_v4.address);
+
+    # [derive(Debug)]
+    enum Message {
+        // Quit,
+        // Move { x: i32, y: i32 }, // Move includes an anonymous struct inside it. 匿名struct
+        Write(String),
+        // ChangeColor(i32, i32, i32)
+    }
+
+    impl Message {
+        fn call(&self) {
+            println!("Message from {:?}", self);
+        }
+    }
+
+    let m = Message::Write(String::from("hello")); // 实例了
+
+    m.call();
+    m.call();
+}
+
+fn use_enum_options() {
+    let some_number = Some(5);
+    let some_string = Some("a string");
+    let absent_number: Option<i32> = None;
 }
