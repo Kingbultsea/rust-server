@@ -1,4 +1,5 @@
 use String;
+use rand::Rng;
 
 fn main() {
     another_function(5);
@@ -23,6 +24,7 @@ fn main() {
     use_enum();
     use_enum_options();
     use_enum_option();
+    use_rand_package();
 }
 
 fn another_function(x: i32) {
@@ -453,4 +455,9 @@ fn use_enum_option() {
     println!("{:?}", plus_one(None));
     println!("{:?}", value);
     println!("{:?}", v);
+}
+
+fn use_rand_package() {
+    let secret_number = rand::thread_rng().gen_range(1..=100); // 不懂 还可以 1..100
+    println!("The secret number is: {}", secret_number);
 }
