@@ -25,6 +25,8 @@ fn main() {
     use_enum_options();
     use_enum_option();
     use_rand_package();
+    use_vector();
+    use_string_utf8();
 }
 
 fn another_function(x: i32) {
@@ -460,4 +462,84 @@ fn use_enum_option() {
 fn use_rand_package() {
     let secret_number = rand::thread_rng().gen_range(1..=100); // 不懂 还可以 1..100
     println!("The secret number is: {}", secret_number);
+}
+
+// Vec在内存中是连接起来的
+fn use_vector() {
+    let v: Vec<i32> = Vec::new();
+    let v1 = vec![1, 2, 3];
+    let mut v2 = Vec::new(); // 类型不用写 后续会自动判断的
+    v2.push(1);
+    println!("{:?} {:?} {:?}", v, v1, v2);
+
+    let third = &v1[2];
+
+    if let Some(third) = v1.get(2) {
+        println!("我们相等了 {}", third);
+    } else {
+        println!("我们并不相等 {}", third);
+    }
+
+    if let Some(3) = v1.get(2) { // 返回 Option<&T>
+        println!("我们相等了 {}", third);
+    } else {
+        println!("我们并不相等 {}", third);
+    }
+
+    // let does_not_exist = &v[100]; 程序会崩溃
+    let does_not_exist = v1.get(0); // 如果有则返回Some(&element) 否则 None
+    println!("{:?}", does_not_exist);
+
+    let c = match does_not_exist {
+        Some(i) => *i, // dereference operator 取消引用
+        _ => 2
+    };
+
+    println!("{}", c);
+
+    let mut v = vec![1, 2, 3, 4, 5];
+    // let first = &v[0];
+    v.push(1); // 不允许 如果Push 有一种情况 如果这块地方内存不够了 需要迁移到新的地方去，所以不允许你们这样搞
+    println!("The first element is: {:?}", v);
+
+    for i in &v {
+        println!("{}", i);
+    }
+
+    for i in &mut v {
+        *i += 10; //  dereference operator 取消引用
+        println!("{}", i);
+    }
+    println!("{:?}", v); // 跟随变化 获得的还是其地址
+
+    // 如果我们想要不同的类型，我们可以套一层enum。
+    // 这些类型都是确定的
+    #[derive(Debug)]
+    enum SpreadsheetCell {
+        Int(i32),
+        Float(f64),
+        Text(String),
+    }
+
+    let row = vec![SpreadsheetCell::Int(3), SpreadsheetCell::Float(10.12), SpreadsheetCell::Text(String::from("String text"))];
+    for i in &row {
+        println!("{:?}", i);
+        match i {
+            SpreadsheetCell::Int(i2) => {
+                println!("{}", i2);
+            },
+            _ => {
+                println!("什么都没"); // 目前没方法把枚举里面的值取出来
+            }
+        };
+
+        // 辣鸡插件 爆红了
+        if let SpreadsheetCell::Float(value) = i {
+            println!("取值 {}", value);
+        }
+    }
+}
+
+fn use_string_utf8() {
+    
 }
